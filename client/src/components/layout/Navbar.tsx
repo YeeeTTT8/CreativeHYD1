@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { useTheme } from "@/components/shared/ThemeProvider";
-import { Moon, Sun } from "lucide-react";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,10 +21,6 @@ const Navbar = () => {
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   const navLinks = [
@@ -80,17 +74,7 @@ const Navbar = () => {
           
           <div className="flex items-center">
             {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-full text-gray-600 dark:text-gray-300 focus:outline-none"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-6 w-6" />
-              ) : (
-                <Moon className="h-6 w-6" />
-              )}
-            </button>
+            <ThemeToggle />
             
             {/* Mobile menu button */}
             <div className="md:hidden ml-4">

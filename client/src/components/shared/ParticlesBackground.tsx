@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from './ThemeProvider';
 
 interface Particle {
   x: number;
@@ -15,7 +14,38 @@ interface Particle {
 const ParticlesBackground = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { theme } = useTheme();
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  
+  // Listen for theme changes
+  useEffect(() => {
+    const checkTheme = () => {
+      // Check if dark mode is active by checking the html element for the dark class
+      const isDark = document.documentElement.classList.contains('dark');
+      setIsDarkMode(isDark);
+    };
+    
+    // Initial check
+    checkTheme();
+    
+    // Setup an observer to watch for class changes on the html element
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.attributeName === 'class' &&
+          mutation.target === document.documentElement
+        ) {
+          checkTheme();
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, { attributes: true });
+    
+    // Cleanup
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
   
   useEffect(() => {
     // Generate random particles
@@ -44,8 +74,8 @@ const ParticlesBackground = () => {
   // Create grid lines
   const gridLines = [];
   const gridSize = 30;
-  const gridColor = theme === 'dark' ? "rgba(59, 130, 246, 0.1)" : "rgba(59, 130, 246, 0.07)";
-  const gridOpacity = theme === 'dark' ? 0.2 : 0.15;
+  const gridColor = isDarkMode ? "rgba(59, 130, 246, 0.1)" : "rgba(59, 130, 246, 0.07)";
+  const gridOpacity = isDarkMode ? 0.2 : 0.15;
   
   for (let i = 1; i < gridSize; i++) {
     const position = `${(i / gridSize) * 100}%`;
