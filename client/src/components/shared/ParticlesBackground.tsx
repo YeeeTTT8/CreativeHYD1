@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from './ThemeProvider';
 
 interface Particle {
   x: number;
@@ -14,6 +15,7 @@ interface Particle {
 const ParticlesBackground = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { theme } = useTheme();
   
   useEffect(() => {
     // Generate random particles
@@ -42,6 +44,8 @@ const ParticlesBackground = () => {
   // Create grid lines
   const gridLines = [];
   const gridSize = 30;
+  const gridColor = theme === 'dark' ? "rgba(59, 130, 246, 0.1)" : "rgba(59, 130, 246, 0.07)";
+  const gridOpacity = theme === 'dark' ? 0.2 : 0.15;
   
   for (let i = 1; i < gridSize; i++) {
     const position = `${(i / gridSize) * 100}%`;
@@ -55,9 +59,9 @@ const ParticlesBackground = () => {
         x2="100%"
         y2={position}
         strokeWidth="0.5"
-        stroke="rgba(59, 130, 246, 0.1)"
+        stroke={gridColor}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
+        animate={{ opacity: gridOpacity }}
         transition={{ duration: 1, delay: i * 0.05 }}
       />
     );
@@ -71,9 +75,9 @@ const ParticlesBackground = () => {
         x2={position}
         y2="100%"
         strokeWidth="0.5"
-        stroke="rgba(59, 130, 246, 0.1)"
+        stroke={gridColor}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
+        animate={{ opacity: gridOpacity }}
         transition={{ duration: 1, delay: i * 0.05 }}
       />
     );
