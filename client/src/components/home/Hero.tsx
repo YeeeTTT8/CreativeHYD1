@@ -46,8 +46,6 @@ const Hero = () => {
       <motion.div 
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1 }}
         animate={{
           y: [0, 10, 0],
           opacity: [0.4, 1, 0.4]
@@ -55,7 +53,8 @@ const Hero = () => {
         transition={{
           duration: 1.5,
           repeat: Infinity,
-          repeatType: "loop"
+          repeatType: "loop",
+          delay: 1
         }}
       >
         <svg 
