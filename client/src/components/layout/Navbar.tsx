@@ -49,11 +49,11 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
             <Link href="/">
-              <a className="flex items-center">
-                <span className="text-2xl font-bold font-poppins text-primary cursor-pointer">
+              <div className="flex items-center cursor-pointer">
+                <span className="text-2xl font-bold font-poppins text-primary">
                   CreativeHYD
                 </span>
-              </a>
+              </div>
             </Link>
           </div>
           
