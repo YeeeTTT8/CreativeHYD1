@@ -24,8 +24,8 @@ if (process.env.NODE_ENV !== "production" && process.env.REPL_ID !== undefined) 
 }
 
 export default defineConfig({
-  base: `/${repoName}/`, // 👈 Important for GitHub Pages
-  plugins,
+  base: `/CreativeHYD1/`, // 👈 Important for GitHub Pages
+  plugins:[react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
