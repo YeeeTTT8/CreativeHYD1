@@ -53,7 +53,6 @@ import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { fileURLToPath } from "url";
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = dirname(__filename);
-var repoName = "CreativeHYD";
 var plugins = [
   react(),
   runtimeErrorOverlay(),
@@ -65,9 +64,9 @@ if (process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0) {
   });
 }
 var vite_config_default = defineConfig({
-  base: `/${repoName}/`,
+  base: `/CreativeHYD1/`,
   // 👈 Important for GitHub Pages
-  plugins,
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
