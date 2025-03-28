@@ -1,265 +1,173 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { portfolioItems } from "../../data/portfolio";
+import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { portfolioItems } from '@/data/portfolio';
+import { useStaggeredAnimation } from '@/hooks/useScrollAnimation';
 
 const Portfolio = () => {
-  const [sectionRef, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const [filter, setFilter] = useState("all");
-  const [selectedProject, setSelectedProject] = useState<any | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const filteredProjects = filter === "all" 
-    ? portfolioItems 
-    : portfolioItems.filter(item => item.category === filter);
-
-  const handleOpenProject = (project: any) => {
-    setSelectedProject(project);
-    setIsDialogOpen(true);
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
+  const { ref, controls, containerVariants, itemVariants } = useStaggeredAnimation(
+    portfolioItems.length,
+    0.1,
+    0.2
+  );
 
   return (
-    <section
-      id="portfolio"
-      ref={sectionRef}
-      className="py-20 bg-white dark:bg-gray-800 transition-colors duration-300"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <motion.h2
-            className="text-4xl font-bold font-poppins mb-4 text-gray-900 dark:text-white"
+    <section id="portfolio" className="py-20 relative overflow-hidden">
+      <div className="container mx-auto px-4">
+        <div className="mb-12 text-center">
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70"
             initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
-          >
-            Our <span className="text-primary dark:text-blue-400">Portfolio</span>
-          </motion.h2>
-          <motion.div
-            className="w-24 h-1 bg-primary mx-auto"
-            initial={{ opacity: 0, scale: 0 }}
-            animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-          ></motion.div>
-          <motion.p
-            className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : { opacity: 0 }}
+          >
+            Our Portfolio
+          </motion.h2>
+          <motion.p 
+            className="text-lg max-w-2xl mx-auto text-gray-600 dark:text-gray-300"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            Showcasing our creative works and successful projects
+            Explore our creative works, showcasing our expertise in editing and cinematography across various projects.
           </motion.p>
         </div>
 
-        {/* Portfolio Filter */}
-        <motion.div
-          className="flex flex-wrap justify-center gap-4 mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <button
-            onClick={() => setFilter("all")}
-            className={`px-6 py-2 rounded-full transition duration-300 ${
-              filter === "all"
-                ? "bg-primary text-white"
-                : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilter("animation")}
-            className={`px-6 py-2 rounded-full transition duration-300 ${
-              filter === "animation"
-                ? "bg-primary text-white"
-                : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
-            }`}
-          >
-            Animation
-          </button>
-          <button
-            onClick={() => setFilter("branding")}
-            className={`px-6 py-2 rounded-full transition duration-300 ${
-              filter === "branding"
-                ? "bg-primary text-white"
-                : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
-            }`}
-          >
-            Branding
-          </button>
-          <button
-            onClick={() => setFilter("ui-ux")}
-            className={`px-6 py-2 rounded-full transition duration-300 ${
-              filter === "ui-ux"
-                ? "bg-primary text-white"
-                : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
-            }`}
-          >
-            UI/UX
-          </button>
-          <button
-            onClick={() => setFilter("video")}
-            className={`px-6 py-2 rounded-full transition duration-300 ${
-              filter === "video"
-                ? "bg-primary text-white"
-                : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
-            }`}
-          >
-            Video
-          </button>
-        </motion.div>
-
-        {/* Portfolio Grid */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        <motion.div 
+          ref={ref}
           variants={containerVariants}
           initial="hidden"
-          animate={inView ? "visible" : "hidden"}
+          animate={controls}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          <AnimatePresence>
-            {filteredProjects.map((item, index) => (
-              <motion.div
-                key={index}
-                className="group portfolio-item"
-                variants={itemVariants}
-                layout
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="relative overflow-hidden rounded-lg shadow-lg h-80">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                    <h3 className="text-white text-xl font-bold">{item.title}</h3>
-                    <p className="text-gray-300">{item.tags}</p>
-                    <button
-                      onClick={() => handleOpenProject(item)}
-                      className="mt-4 bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-full inline-flex items-center"
-                    >
-                      View Project <i className="fas fa-arrow-right ml-2"></i>
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          {portfolioItems.map((item, index) => (
+            <PortfolioItem key={index} item={item} variants={itemVariants} />
+          ))}
         </motion.div>
+      </div>
+    </section>
+  );
+};
 
-        <div className="text-center mt-12">
-          <motion.a
-            href="#"
-            className="inline-block bg-primary hover:bg-blue-600 text-white px-8 py-3 rounded-full transition duration-300"
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View All Projects
-          </motion.a>
+interface PortfolioItemProps {
+  item: {
+    title: string;
+    category: string;
+    image: string;
+    description: string;
+    technologies: string[];
+  };
+  variants: any;
+}
+
+const PortfolioItem: React.FC<PortfolioItemProps> = ({ item, variants }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    
+    const card = cardRef.current;
+    const rect = card.getBoundingClientRect();
+    
+    // Calculate mouse position relative to card center
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+    
+    // Calculate rotation based on mouse position
+    // We divide by 25 to reduce the rotation effect
+    const rotateY = (mouseX - centerX) / 25;
+    const rotateX = (centerY - mouseY) / 25;
+    
+    // Calculate highlight position
+    const x = ((mouseX - rect.left) / rect.width) * 100;
+    const y = ((mouseY - rect.top) / rect.height) * 100;
+    
+    setRotation({ x: rotateX, y: rotateY });
+    setPosition({ x, y });
+  };
+  
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setRotation({ x: 0, y: 0 });
+  };
+  
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+  
+  return (
+    <motion.div
+      ref={cardRef}
+      variants={variants}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 h-[400px] group cursor-pointer"
+      style={{
+        transform: isHovered ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale3d(1.02, 1.02, 1.02)` : 'perspective(1000px) rotateX(0) rotateY(0)',
+        transition: 'transform 0.3s ease',
+      }}
+    >
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-all duration-500"
+        style={{
+          backgroundImage: `url(${item.image})`,
+          transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+        }}
+      />
+      
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 transition-opacity duration-300" />
+      
+      {/* Dynamic highlight effect */}
+      {isHovered && (
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(circle at ${position.x}% ${position.y}%, rgba(255, 255, 255, 0.8), transparent 50%)`,
+          }}
+        />
+      )}
+      
+      {/* Content */}
+      <div className="absolute bottom-0 left-0 p-6 w-full transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+        <span className="inline-block px-3 py-1 text-xs bg-primary text-white rounded-full mb-3 opacity-90">
+          {item.category}
+        </span>
+        <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+        <p className="text-gray-200 text-sm mb-4 opacity-0 transform translate-y-10 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+          {item.description}
+        </p>
+        <div className="flex flex-wrap gap-2 opacity-0 transform translate-y-10 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
+          {item.technologies.map((tech, index) => (
+            <span key={index} className="px-2 py-1 text-xs bg-gray-800/60 text-gray-300 rounded">
+              {tech}
+            </span>
+          ))}
+        </div>
+        
+        {/* View Project Button - Only appears on hover */}
+        <div className="mt-4 opacity-0 transform translate-y-10 transition-all duration-700 group-hover:opacity-100 group-hover:translate-y-0">
+          <button className="px-4 py-2 bg-primary/90 hover:bg-primary text-white rounded-md text-sm transition-colors duration-300">
+            View Project
+          </button>
         </div>
       </div>
-
-      {/* Project Details Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl w-full mx-auto max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-xl">
-          <DialogHeader>
-            <DialogTitle className="text-3xl font-bold dark:text-white">{selectedProject?.title}</DialogTitle>
-            <div className="flex flex-wrap gap-2 mb-6">
-              {selectedProject?.tags.split(', ').map((tag: string, index: number) => (
-                <span key={index} className="bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400 px-3 py-1 rounded-full text-sm">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </DialogHeader>
-          
-          {selectedProject && (
-            <>
-              <div className="mb-8">
-                <img 
-                  src={selectedProject.image}
-                  alt={selectedProject.title}
-                  className="w-full rounded-lg"
-                />
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                <div>
-                  <h3 className="text-lg font-bold mb-2 dark:text-white">Client</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{selectedProject.client}</p>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2 dark:text-white">Timeline</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{selectedProject.timeline}</p>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2 dark:text-white">Services</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{selectedProject.tags}</p>
-                </div>
-              </div>
-              
-              <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4 dark:text-white">The Challenge</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  {selectedProject.challenge}
-                </p>
-              </div>
-              
-              <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4 dark:text-white">Our Approach</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {selectedProject.approach}
-                </p>
-              </div>
-              
-              <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4 dark:text-white">The Results</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {selectedProject.results}
-                </p>
-              </div>
-              
-              <DialogFooter className="flex justify-between items-center border-t dark:border-gray-700 pt-6">
-                <a href="#" className="text-primary dark:text-blue-400 hover:underline">Previous Project</a>
-                <a href="#" className="text-primary dark:text-blue-400 hover:underline">Next Project</a>
-              </DialogFooter>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-    </section>
+      
+      {/* Film frame borders for cinematography/editing theme */}
+      <div className="absolute inset-0 border-[3px] border-transparent group-hover:border-primary/30 transition-all duration-500 pointer-events-none">
+        {/* Corner marks to simulate film frame */}
+        <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+    </motion.div>
   );
 };
 

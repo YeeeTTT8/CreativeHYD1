@@ -4,6 +4,8 @@ import Hero from "../components/home/Hero";
 import About from "../components/home/About";
 import Services from "../components/home/Services";
 import Portfolio from "../components/home/Portfolio";
+import Cinematography from "../components/home/Cinematography";
+import EditingShowcase from "../components/home/EditingShowcase";
 import Testimonials from "../components/home/Testimonials";
 import Contact from "../components/home/Contact";
 import Footer from "../components/layout/Footer";
@@ -21,6 +23,8 @@ const Home = () => {
       <About />
       <Services />
       <Portfolio />
+      <Cinematography />
+      <EditingShowcase />
       <Testimonials />
       <Contact />
       <Footer />

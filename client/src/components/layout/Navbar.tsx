@@ -28,6 +28,8 @@ const Navbar = () => {
     { name: "About", href: "#about" },
     { name: "Services", href: "#services" },
     { name: "Portfolio", href: "#portfolio" },
+    { name: "Cinematography", href: "#cinematography" },
+    { name: "Editing", href: "#editing" },
     { name: "Testimonials", href: "#testimonials" },
     { name: "Contact", href: "#contact" },
   ];
@@ -53,12 +55,12 @@ const Navbar = () => {
           
           {/* Desktop Menu */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-8">
-              {navLinks.slice(0, 5).map((link) => (
+            <div className="ml-10 flex items-center space-x-4">
+              {navLinks.slice(0, 7).map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  className="font-medium hover:text-primary dark:hover:text-primary-light transition duration-300"
+                  className="text-sm font-medium hover:text-primary dark:hover:text-primary-light transition duration-300"
                 >
                   {link.name}
                 </a>

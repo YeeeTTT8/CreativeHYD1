@@ -8,8 +8,8 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Change "your-repo-name" to your actual GitHub repository name
-const repoName = "CreativeHYD";  
+// Change this to your actual GitHub repo name
+const repoName = "CreativeHYD1";  
 
 const plugins = [
   react(),
@@ -24,8 +24,8 @@ if (process.env.NODE_ENV !== "production" && process.env.REPL_ID !== undefined) 
 }
 
 export default defineConfig({
-  base: `/CreativeHYD1/`, // 👈 Important for GitHub Pages
-  plugins:[react()],
+  base: `/CreativeHYD1/`, // 👈 Make sure this matches your GitHub repository name!
+  plugins,
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),

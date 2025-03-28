@@ -1,24 +1,22 @@
-import { Route, Switch, Router } from "wouter";
+import { Route, Switch } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Home from "./pages/Home";
 import CustomCursor from "./components/shared/CustomCursor";
 import Preloader from "./components/shared/Preloader";
 import ScrollToTop from "./components/shared/ScrollToTop";
+import AmbientBackground from "@/components/shared/AmbientBackground";
+import TransitionProvider from "@/components/shared/TransitionProvider";
+import { ScrollProgress } from "@/components/shared/ScrollAnimator";
 
-// Enable hash-based routing
-const base = window.location.pathname.includes("/CreativeHYD1/")
-  ? "/CreativeHYD1"
-  : "/";
-
-function AppRouter() {
+function Router() {
   return (
-    <Router base={base}>
+    <TransitionProvider>
       <Switch>
         <Route path="/" component={Home} />
         <Route component={NotFound} />
       </Switch>
-    </Router>
+    </TransitionProvider>
   );
 }
 
@@ -28,7 +26,9 @@ function App() {
       <Preloader />
       <CustomCursor />
       <ScrollToTop />
-      <AppRouter />
+      <AmbientBackground />
+      <ScrollProgress />
+      <Router />
       <Toaster />
     </>
   );

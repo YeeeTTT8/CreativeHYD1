@@ -1,6 +1,6 @@
 export const services = [
   {
-    title: "Motion Graphics & Animation",
+    title: "Motion Graphics",
     description: "Captivating animations and motion graphics that bring your story to life with fluid movement and visual impact.",
     icon: "fa-film",
   },
@@ -10,9 +10,9 @@ export const services = [
     icon: "fa-paint-brush",
   },
   {
-    title: "UI/UX Design",
-    description: "Intuitive, beautiful interfaces and seamless user experiences that make digital interactions a delight.",
-    icon: "fa-desktop",
+    title: "Web Development",
+    description: "Custom websites and web applications that combine stunning design with seamless functionality and performance.",
+    icon: "fa-laptop",
   },
   {
     title: "Video Production",

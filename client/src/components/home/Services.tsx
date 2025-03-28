@@ -1,39 +1,34 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { services } from "../../data/services";
+import { testimonials } from "../../data/testimonials";
+import { useRef, useState } from "react";
 
-const Services = () => {
+const Testimonials = () => {
   const [sectionRef, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+  // For controlling the active testimonial index
+  const [activeIndex, setActiveIndex] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  
+  // Function to handle dot navigation
+  const goToSlide = (index: number) => {
+    setActiveIndex(index);
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(-${index * 33.333}%)`;
+    }
   };
 
-  const itemVariants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
+  // Duplicate testimonials to create an infinite-like loop
+  const displayTestimonials = [...testimonials, ...testimonials.slice(0, 3)];
 
   return (
     <section
-      id="services"
+      id="testimonials"
       ref={sectionRef}
-      className="py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
+      className="py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
@@ -43,7 +38,7 @@ const Services = () => {
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
           >
-            Our <span className="text-primary dark:text-blue-400">Services</span>
+            Client <span className="text-primary dark:text-blue-400">Testimonials</span>
           </motion.h2>
           <motion.div
             className="w-24 h-1 bg-primary mx-auto"
@@ -57,58 +52,86 @@ const Services = () => {
             animate={inView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            Comprehensive creative solutions to elevate your brand presence
+            Hear what our clients have to say about working with us
           </motion.p>
         </div>
 
+        {/* Testimonial slider container */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
+          className="testimonial-container"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
         >
-          {services.map((service, index) => (
-            <motion.div
-              key={index}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl p-8 transition-all duration-300 transform hover:-translate-y-2"
-              variants={itemVariants}
-              whileHover={{ 
-                scale: 1.03,
-                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" 
+          {/* Slider wrapper with overflow hidden */}
+          <div className="overflow-hidden mx-auto max-w-6xl">
+            {/* Testimonial track that slides */}
+            <div 
+              ref={trackRef}
+              className="testimonial-track" 
+              style={{ 
+                width: `${displayTestimonials.length * 33.333}%`,
+                transform: `translateX(-${activeIndex * 33.333}%)`,
+                transition: "transform 0.5s ease-out"
               }}
             >
-              <div className="text-5xl text-gray-400 mb-6 transition-all duration-300 group-hover:text-primary group-hover:scale-110">
-                <i className={`fas ${service.icon} text-primary`}></i>
-              </div>
-              <h3 className="text-xl font-bold mb-4 dark:text-white">{service.title}</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                {service.description}
-              </p>
-              <a
-                href="#"
-                className="inline-flex items-center text-primary dark:text-blue-400 font-medium hover:text-blue-600 dark:hover:text-blue-300"
-              >
-                Learn more
-                <svg
-                  className="w-4 h-4 ml-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              {displayTestimonials.map((testimonial, index) => (
+                <div
+                  key={index}
+                  className="inline-flex px-3"
+                  style={{ width: "33.333%" }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  ></path>
-                </svg>
-              </a>
-            </motion.div>
-          ))}
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-[450px] w-[350px] mx-auto flex flex-col">
+                    <div className="flex items-center mb-4">
+                      <img
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        className="w-14 h-14 rounded-full object-cover mr-3 border-2 border-primary"
+                      />
+                      <div>
+                        <h4 className="font-bold text-lg dark:text-white">{testimonial.name}</h4>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">{testimonial.position}</p>
+                      </div>
+                    </div>
+                    <div className="mb-4">
+                      <div className="flex text-yellow-400">
+                        {Array(5).fill(0).map((_, i) => (
+                          <i key={i} className={`fas ${i < testimonial.rating ? 'fa-star' : i === Math.floor(testimonial.rating) && testimonial.rating % 1 > 0 ? 'fa-star-half-alt' : 'fa-star text-gray-300'}`}></i>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="relative flex-grow flex flex-col justify-center overflow-hidden px-2">
+                      <i className="fas fa-quote-left text-xl text-primary/30 absolute top-2 left-1"></i>
+                      <div className="overflow-y-auto px-5 pt-6 pb-4 max-h-[280px] scrollbar-thin">
+                        <p className="text-gray-600 dark:text-gray-400 italic text-base leading-relaxed">
+                          {testimonial.quote}
+                        </p>
+                      </div>
+                      <i className="fas fa-quote-right text-xl text-primary/30 absolute bottom-2 right-1"></i>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </motion.div>
+
+        {/* Navigation dots */}
+        <div className="flex justify-center mt-10">
+          <div className="flex space-x-3">
+            {testimonials.map((_, index) => (
+              <button 
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-colors duration-300 ${activeIndex === index ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}`}
+                aria-label={`Go to testimonial ${index + 1}`}
+              ></button>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
 };
 
-export default Services;
+export default Testimonials;
