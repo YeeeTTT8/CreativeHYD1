@@ -65,8 +65,8 @@ if (process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0) {
 }
 var vite_config_default = defineConfig({
   base: `/CreativeHYD1/`,
-  // 👈 Important for GitHub Pages
-  plugins: [react()],
+  // 👈 Make sure this matches your GitHub repository name!
+  plugins,
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
