@@ -21,11 +21,11 @@ const Home = () => {
       <Navbar />
       <Hero />
       <About />
-      <Services />
+
       <Portfolio />
       <Cinematography />
       <EditingShowcase />
-      <Testimonials />
+      <Services />
       <Contact />
       <Footer />
     </div>
